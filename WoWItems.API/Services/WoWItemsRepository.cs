@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SQLitePCL;
 using System.ComponentModel.DataAnnotations;
 using WoWItems.API.DbContexts;
 using WoWItems.API.Entities;
