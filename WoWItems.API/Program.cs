@@ -1,8 +1,19 @@
+using Microsoft.EntityFrameworkCore;
+using WoWItems.API.DbContexts;
+using WoWItems.API.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddNewtonsoftJson();
+
+builder.Services.AddDbContext<WoWItemsContext>(
+    dbContextOptions => dbContextOptions.UseSqlite("Data Source=WoWItems.db"));
+
+builder.Services.AddScoped<IWoWItemsRepository, WoWItemsRepository>();
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
