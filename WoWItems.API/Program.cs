@@ -10,7 +10,8 @@ builder.Services.AddControllers()
     .AddNewtonsoftJson();
 
 builder.Services.AddDbContext<WoWItemsContext>(
-    dbContextOptions => dbContextOptions.UseSqlite("Data Source=WoWItems.db"));
+    dbContextOptions => dbContextOptions.UseSqlServer("Data Source= (localdb)\\MSSQLLocalDB; Initial Catalog = WoWItemsDatabase"));
+
 
 builder.Services.AddScoped<IWoWItemsRepository, WoWItemsRepository>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
