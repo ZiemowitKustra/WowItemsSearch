@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
+using WoWItems.API.DbContexts;
+using WoWItems.API.Entities;
 using WoWItems.API.Models;
 using WoWItems.API.Services;
 
@@ -34,16 +36,10 @@ namespace WoWItems.API.Controllers
             {
                 pageSize = maxItemsPageSize;
             }
-            ////////////////
-            //searching for SecondaryStats doesnt work
-            ////////////////
-            //var items = await _woWItemsRepository
-            //    .GetItemsAsync(name, primaryStat, secondaryStat, int pageNumber, int pageSize);
-            var (items, paginationMetadata) = await _woWItemsRepository
-                  .GetItemsAsync(name, (PrimaryStatType?)primaryStat, 
-                                 pageNumber, pageSize);
 
-            Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
+            var items = await _woWItemsRepository.GetItemsAsync(
+                name, (PrimaryStatType?)primaryStat, (SecondaryStatType?)secondaryStat, pageNumber, pageSize);
+            
 
             return Ok(_mapper.Map<IEnumerable<ItemDto>>(items));
         }
@@ -57,6 +53,36 @@ namespace WoWItems.API.Controllers
                 return NotFound();
             }
             return Ok(_mapper.Map<ItemDto>(item));
+        }
+
+        [HttpPost]
+        public  ActionResult PostNewItem(ItemCreationDto item)
+        {
+            var _item = _mapper.Map<Item>(item);
+            _woWItemsRepository.AddItem(_item);
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public ActionResult DeleteItem(int id)
+        {
+            var item = _woWItemsRepository.GetItemAsync(id).Result;
+            if (item == null)
+            {
+                return NotFound();
+            }
+            while (item.PrimaryStat.Count > 0)
+            {
+                var stat = item.PrimaryStat.Where(p => p.ItemId == id).First();
+                item.PrimaryStat.Remove(stat);
+            }
+            while (item.SecondaryStats.Count > 0)
+            {
+                var stat = item.SecondaryStats.Where(s => s.ItemId == id).First();
+                item.SecondaryStats.Remove(stat);
+            }
+            _woWItemsRepository.DeleteItem(item);
+            return NoContent();
         }
     }
 }

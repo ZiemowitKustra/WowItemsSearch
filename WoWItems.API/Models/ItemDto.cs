@@ -1,4 +1,6 @@
-﻿namespace WoWItems.API.Models
+﻿using WoWItems.API.Entities;
+
+namespace WoWItems.API.Models
 {
     public class ItemDto
     {
@@ -6,7 +8,8 @@
         public ItemType Type { get; set; }
         public string Name { get; set; } = string.Empty;
         public int? Armor { get; set; }
-        public PrimaryStatDto? PrimaryStat { get; set; }
+        public ICollection<PrimaryStat> PrimaryStat { get; set; } 
+            = new List<PrimaryStat>();
         public int? Stamina { get; set; }
         public ICollection<SecondaryStatDto> SecondaryStats { get; set; }
             = new List<SecondaryStatDto>();
