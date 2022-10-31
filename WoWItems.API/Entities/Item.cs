@@ -16,12 +16,12 @@ namespace WoWItems.API.Entities
         public string Name { get; set; }
         public int? Armor { get; set; }
 
-        public PrimaryStat PrimaryStat { get; set; } = null!;
+        public ICollection<PrimaryStat> PrimaryStat { get; set; } = new List<PrimaryStat>();
         public int Stamina { get; set; }
         public ICollection<SecondaryStat> SecondaryStats { get; set; }
             = new List<SecondaryStat>();
-        public string? EquipEffect { get; set; }
-        public string? UseEffect { get; set; }
+        public string? EquipEffect { get; set; } = string.Empty;
+        public string? UseEffect { get; set; } = string.Empty;
         public int Durability { get; set; }
 
         public Item(string name)

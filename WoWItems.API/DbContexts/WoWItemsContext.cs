@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Reflection.Metadata;
 using System.Text;
 using WoWItems.API.Entities;
 using WoWItems.API.Models;
@@ -15,12 +16,16 @@ namespace WoWItems.API.DbContexts
 
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        public WoWItemsContext()
         {
-            optionsBuilder.UseSqlServer("Data Source= (localdb)\\MSSQLLocalDB; Initial Catalog = WoWItemsDatabase");
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //add requirements on id
+            modelBuilder.Entity<Item>()
+                    .Property(i => i.Id)
+                    .IsRequired();
+            //filling database
             modelBuilder.Entity<Item>().HasData(
                 new Item("Sulfuras, Hand of Ragnaros")
                 {

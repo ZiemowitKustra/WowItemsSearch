@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WoWItems.API.DbContexts;
 
@@ -11,9 +12,10 @@ using WoWItems.API.DbContexts;
 namespace WoWItems.API.Migrations
 {
     [DbContext(typeof(WoWItemsContext))]
-    partial class WoWItemsContextModelSnapshot : ModelSnapshot
+    [Migration("20221029122407_WoWItemsInitialMigration2")]
+    partial class WoWItemsInitialMigration2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -65,19 +67,16 @@ namespace WoWItems.API.Migrations
                             EquipEffect = "Deals 5 fire dmg to anyone who strikes you with mele attack",
                             Name = "Sulfuras, Hand of Ragnaros",
                             Stamina = 12,
-                            Type = 1,
-                            UseEffect = ""
+                            Type = 1
                         },
                         new
                         {
                             Id = 2,
                             Armor = 679,
                             Durability = 120,
-                            EquipEffect = "",
                             Name = "Ruined Crest of Lorderon",
                             Stamina = 81,
-                            Type = 0,
-                            UseEffect = ""
+                            Type = 0
                         });
                 });
 
@@ -163,20 +162,24 @@ namespace WoWItems.API.Migrations
 
             modelBuilder.Entity("WoWItems.API.Entities.PrimaryStat", b =>
                 {
-                    b.HasOne("WoWItems.API.Entities.Item", null)
+                    b.HasOne("WoWItems.API.Entities.Item", "Item")
                         .WithMany("PrimaryStat")
                         .HasForeignKey("ItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Item");
                 });
 
             modelBuilder.Entity("WoWItems.API.Entities.SecondaryStat", b =>
                 {
-                    b.HasOne("WoWItems.API.Entities.Item", null)
+                    b.HasOne("WoWItems.API.Entities.Item", "Item")
                         .WithMany("SecondaryStats")
                         .HasForeignKey("ItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Item");
                 });
 
             modelBuilder.Entity("WoWItems.API.Entities.Item", b =>

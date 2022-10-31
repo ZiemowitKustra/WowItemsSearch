@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 using WoWItems.API.DbContexts;
 using WoWItems.API.Services;
 
@@ -10,7 +11,7 @@ builder.Services.AddControllers()
     .AddNewtonsoftJson();
 
 builder.Services.AddDbContext<WoWItemsContext>(
-    dbContextOptions => dbContextOptions.UseSqlServer("Data Source= (localdb)\\MSSQLLocalDB; Initial Catalog = WoWItemsDatabase"));
+    dbContextOptions => dbContextOptions.UseSqlServer(builder.Configuration["ConnectionStrings:WoWItemsDBConnectionString"]));
 
 
 builder.Services.AddScoped<IWoWItemsRepository, WoWItemsRepository>();

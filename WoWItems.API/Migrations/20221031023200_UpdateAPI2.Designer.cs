@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WoWItems.API.DbContexts;
 
@@ -11,9 +12,10 @@ using WoWItems.API.DbContexts;
 namespace WoWItems.API.Migrations
 {
     [DbContext(typeof(WoWItemsContext))]
-    partial class WoWItemsContextModelSnapshot : ModelSnapshot
+    [Migration("20221031023200_UpdateAPI2")]
+    partial class UpdateAPI2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

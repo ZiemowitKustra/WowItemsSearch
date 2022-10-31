@@ -7,6 +7,8 @@ namespace WoWItems.API.Profiles
         public ItemProfile()
         {
             CreateMap<Entities.Item, Models.ItemDto>();
+            CreateMap<Models.ItemDto, Entities.Item>();
+            CreateMap<Models.ItemCreationDto, Entities.Item>();
         }
     }
 }

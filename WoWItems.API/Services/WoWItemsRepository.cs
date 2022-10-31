@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using WoWItems.API.DbContexts;
 using WoWItems.API.Entities;
@@ -15,9 +17,13 @@ namespace WoWItems.API.Services
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public Task AddPrimaryStatToItemAsync(int itemId, PrimaryStat primaryStat)
+        public async Task AddPrimaryStatToItemAsync(int itemId, PrimaryStat primaryStat)
         {
-            throw new NotImplementedException();
+            var item = await GetItemAsync(itemId);
+            if (item != null)
+            {
+                item.PrimaryStat.Add(primaryStat);
+            }
         }
 
         public async Task AddSecondaryStatToItemAsync(int itemId, SecondaryStat secondaryStat)
@@ -45,10 +51,10 @@ namespace WoWItems.API.Services
                 .OrderBy(i => i.Name).ToListAsync();
         }
 
-        public async Task<PrimaryStat?> GetStatAsync(int itemId)
+        public async Task<PrimaryStat?> GetStatAsync(int itemId, PrimaryStatType primaryStatType)
         {
-            return await _context.PrimaryStat.Where(s => s.ItemId == itemId)
-                .FirstOrDefaultAsync();
+            return await _context.PrimaryStat.Where(s => s.ItemId == itemId
+            && s.PrimaryStatType == primaryStatType).FirstOrDefaultAsync();
         }
 
         public async Task<SecondaryStat?> GetStatAsync(int itemId, SecondaryStatType secondaryStatType)
@@ -79,58 +85,57 @@ namespace WoWItems.API.Services
                 .Where(s => s.ItemId == itemId && s.PrimaryStatType == primaryStatType).AnyAsync();
         }
 
-        /// <summary>
-        /// if GetItemsAsync(
-        //    string? name, PrimaryStatType? primaryStat, SecondaryStatType? secondaryStat)
-        // start working move paging implementation to that method
-        /// </summary>
-        public async Task<(IEnumerable<Item>, PaginationMetadata)> GetItemsAsync(string? name, PrimaryStatType? primaryStat,
-                                                           int pageNumber, int pageSize)
+        public async Task<IEnumerable<Item>> GetItemsAsync(
+            string? name, PrimaryStatType? primaryStat, SecondaryStatType? secondaryStat, int pageNumber, int pageSize)
         {
-            var collection = _context.Items as IQueryable<Item>;
-            if (!string.IsNullOrWhiteSpace(name))
+            var itemCollection = _context.Items
+                .Include(i => i.PrimaryStat)
+                .Include(i => i.SecondaryStats) as IQueryable<Item>;
+
+            if (!string.IsNullOrEmpty(name))
             {
-                name = name.Trim();
-                collection = collection.Where(i => i.Name.Contains(name));
+                name = name.Trim().ToLower();
+                itemCollection = itemCollection.Where(i => i.Name.ToLower().Contains(name));
             }
             if (primaryStat.HasValue)
             {
-                collection = collection.Where(i => i.PrimaryStat.PrimaryStatType == primaryStat);
+                itemCollection = itemCollection.Where(i => i.PrimaryStat.Any(p => p.PrimaryStatType == primaryStat));
             }
-            var totalItemCount = await collection.CountAsync();
-            var paginationMatadata = new PaginationMetadata(totalItemCount, pageSize, pageNumber);
-            var collectionToReturn = await collection.Include(i => i.PrimaryStat)
-                                   .Include(i => i.SecondaryStats)
-                                   .OrderBy(i => i.Name)
-                                   .Skip(pageSize * (pageNumber-1))
-                                   .Take(pageSize)
-                                   .ToListAsync();
+            if (secondaryStat.HasValue)
+            {
+                itemCollection = itemCollection.Where(i => i.SecondaryStats.Any(s => s.SecondaryStatType == secondaryStat));
+            }
 
-            return (collectionToReturn, paginationMatadata);
+            var itemCollectionToReturn = await itemCollection.OrderBy(i => i.Name)
+                                .Skip(pageSize * (pageNumber - 1))
+                                .Take(pageSize)
+                                .ToListAsync();
+
+            return itemCollectionToReturn;
         }
-        ////////////////////////
-        //Doesnt work -> how to iterate items if they contein one of secondary stats or both?
-        //and add to interface
-        ////////////////////////
-        //public async Task<IEnumerable<Item>> GetItemsAsync(
-        //    string? name, PrimaryStatType? primaryStat, SecondaryStatType? secondaryStat)
-        //{
-        //    var secondaryCollection = _context.SecondaryStat as IQueryable<SecondaryStat>;
-        //    var itemCollection = _context.Items as IQueryable<Item>;
-        //    secondaryCollection = secondaryCollection.Where(s => s.SecondaryStatType == secondaryStat);
-        //    if (!string.IsNullOrEmpty(name))
-        //    {
-        //        name = name.Trim();
-        //        itemCollection = itemCollection.Where(i => i.Name.Contains(name));
-        //    }
-        //    if (primaryStat.HasValue)
-        //    {
-        //        itemCollection.Where(i => i.PrimaryStat.PrimaryStatType == primaryStat);
-        //    }
-        //    return await itemCollection.Where(i => i.SecondaryStats == secondaryCollection)
-        //                        .Include(i => i.PrimaryStat)
-        //                        .Include(i => i.SecondaryStats)
-        //                        .OrderBy(i => i.Name).ToListAsync();
-        //}
+
+        public void DeleteItem(Item item)
+        {
+            _context.Items.Remove(item);
+            _context.SaveChanges();
+        }
+
+        public void AddItem(Item item)
+        {
+            _context.Items.Add(item);
+            _context.SaveChanges();
+        }
+
+        public void UpdateStat(PrimaryStat primaryStat)
+        {            
+            _context.PrimaryStat.Update(primaryStat);
+            _context.SaveChanges();
+        }
+
+        public void UpdateStat(SecondaryStat secondaryStat)
+        {
+            _context.SecondaryStat.Update(secondaryStat);
+            _context.SaveChanges();
+        }
     }
 }
