@@ -68,9 +68,9 @@ namespace WoWItems.API.Services
             return await _context.Items.Where(i => i.Id == itemId).AnyAsync();
         }
 
-        public async Task<bool> SaveChangesAsync()
+        public async Task SaveChangesAsync()
         {
-            return (await _context.SaveChangesAsync() >= 0);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<bool> StatExistsAsync(int itemId, SecondaryStatType secondaryStatType)
@@ -114,28 +114,28 @@ namespace WoWItems.API.Services
             return itemCollectionToReturn;
         }
 
-        public void DeleteItem(Item item)
+        public async Task DeleteItemAsync(Item item)
         {
             _context.Items.Remove(item);
-            _context.SaveChanges();
+            await SaveChangesAsync();
         }
 
-        public void AddItem(Item item)
+        public async Task AddItemAsync(Item item)
         {
             _context.Items.Add(item);
-            _context.SaveChanges();
+            await SaveChangesAsync();
         }
 
-        public void UpdateStat(PrimaryStat primaryStat)
+        public async Task UpdateStatAsync(PrimaryStat primaryStat)
         {            
             _context.PrimaryStat.Update(primaryStat);
-            _context.SaveChanges();
+            await SaveChangesAsync();
         }
 
-        public void UpdateStat(SecondaryStat secondaryStat)
+        public async Task UpdateStatAsync(SecondaryStat secondaryStat)
         {
             _context.SecondaryStat.Update(secondaryStat);
-            _context.SaveChanges();
+            await SaveChangesAsync();
         }
     }
 }

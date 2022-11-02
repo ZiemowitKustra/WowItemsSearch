@@ -15,10 +15,10 @@ namespace WoWItems.API.Services
         Task<SecondaryStat?> GetStatAsync(int itemId, SecondaryStatType secondaryStatType);
         Task AddSecondaryStatToItemAsync(int itemId, SecondaryStat secondaryStat);
         Task AddPrimaryStatToItemAsync(int itemId, PrimaryStat primaryStat);
-        void AddItem(Item item);
-        Task<bool> SaveChangesAsync();
-        void DeleteItem(Item item);
-        void UpdateStat(PrimaryStat primaryStat);
-        void UpdateStat(SecondaryStat secondaryStat);
+        Task AddItemAsync(Item item);
+        Task SaveChangesAsync();
+        Task DeleteItemAsync(Item item);
+        Task UpdateStatAsync(PrimaryStat primaryStat);
+        Task UpdateStatAsync(SecondaryStat secondaryStat);
     }
 }

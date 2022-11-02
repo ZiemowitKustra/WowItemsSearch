@@ -25,6 +25,18 @@ namespace WoWItems.API.DbContexts
             modelBuilder.Entity<Item>()
                     .Property(i => i.Id)
                     .IsRequired();
+            modelBuilder.Entity<Item>()
+                .HasMany(i => i.PrimaryStat)
+                .WithOne(p => p.Item)
+                .HasForeignKey(p => p.ItemId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .IsRequired();
+            modelBuilder.Entity<Item>()
+                .HasMany(i => i.SecondaryStats)
+                .WithOne(s => s.Item)
+                .HasForeignKey(s => s.ItemId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .IsRequired();
             //filling database
             modelBuilder.Entity<Item>().HasData(
                 new Item("Sulfuras, Hand of Ragnaros")
