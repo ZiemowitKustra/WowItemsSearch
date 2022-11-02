@@ -23,12 +23,13 @@ namespace WoWItems.API.Controllers
         [HttpGet(Name = "GetPrimaryStat")]
         public ActionResult<IEnumerable<PrimaryStatDto>> GetPrimaryStat(int itemId)
         {
-            var item = _woWItemsRepository.GetItemAsync(itemId);
+            var item = _woWItemsRepository.GetItemAsync(itemId).Result;
             if (item == null)
             {
                 return NotFound();
             }
-            return Ok(_mapper.Map<PrimaryStatDto>(item));
+            var stats = item.PrimaryStat.ToList();
+            return Ok(_mapper.Map<IEnumerable<PrimaryStatDto>>(stats));
         }
 
         [HttpPost]
@@ -71,16 +72,16 @@ namespace WoWItems.API.Controllers
                 return NotFound();
             }
 
-            var currentStat = _woWItemsRepository.GetStatAsync(itemId, primary.PrimaryStatType).Result;
+            var currentStat = await _woWItemsRepository.GetStatAsync(itemId, primary.PrimaryStatType);
             currentStat.Value = primary.Value;
-            _woWItemsRepository.UpdateStat(currentStat);
-            return NoContent();
+            await _woWItemsRepository.UpdateStatAsync(currentStat);
+            return Ok(_mapper.Map<PrimaryStat>(currentStat));
         }
 
         [HttpDelete("{statId}")]
-        public ActionResult DeletePrimaryStat(int itemId, int statId)
+        public async Task<ActionResult> DeletePrimaryStat(int itemId, int statId, CancellationToken token=default)
         {
-            var item = _woWItemsRepository.GetItemAsync(itemId).Result;
+            var item = await _woWItemsRepository.GetItemAsync(itemId);
             if(item == null)
             {
                 return NotFound();
@@ -91,6 +92,7 @@ namespace WoWItems.API.Controllers
                 return NotFound();
             }
             item.PrimaryStat.Remove(primaryStat);
+            await _woWItemsRepository.SaveChangesAsync(); //dorzucac tokeny! zeby calcela ogarnac
             return NoContent();
         }
 

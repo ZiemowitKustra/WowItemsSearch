@@ -23,14 +23,15 @@ namespace WoWItems.API.Controllers
         }
 
         [HttpGet(Name = "GetSecondaryStats")]
-        public ActionResult<IEnumerable<SecondaryStatDto>> GetSecondaryStats(int itemId)
+        public async Task<ActionResult<IEnumerable<SecondaryStatDto>>> GetSecondaryStats(int itemId)
         {
-            var item = _woWItemsRepository.GetItemAsync(itemId);
+            var item = await _woWItemsRepository.GetItemAsync(itemId);
             if(item == null)
             {
                 return NotFound();
             }
-            return Ok(_mapper.Map<SecondaryStatDto>(item));
+            var stats = item.SecondaryStats.ToList();
+            return Ok(_mapper.Map<IEnumerable<SecondaryStatDto>>(stats));
         }
 
         [HttpPost]
@@ -73,16 +74,16 @@ namespace WoWItems.API.Controllers
                 return NotFound();
             }
 
-            var currentStat = _woWItemsRepository.GetStatAsync(itemId, secondary.SecondaryStatType).Result;
+            var currentStat = await _woWItemsRepository.GetStatAsync(itemId, secondary.SecondaryStatType);
             currentStat.Value = secondary.Value;
-            _woWItemsRepository.UpdateStat(currentStat);
+            await _woWItemsRepository.UpdateStatAsync(currentStat);
             return NoContent();
         }
 
         [HttpDelete("{statId}")]
-        public ActionResult DeleteSecondaryStat(int itemId, int statId)
+        public async Task<ActionResult> DeleteSecondaryStat(int itemId, int statId)
         {
-            var item = _woWItemsRepository.GetItemAsync(itemId).Result;
+            var item = await _woWItemsRepository.GetItemAsync(itemId);
             if (item == null)
             {
                 return NotFound();

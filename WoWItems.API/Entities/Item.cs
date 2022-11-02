@@ -6,13 +6,9 @@ namespace WoWItems.API.Entities
 {
     public class Item
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public ItemType Type { get; set; }
 
-        [Required]
-        [MinLength(3)]
         public string Name { get; set; }
         public int? Armor { get; set; }
 

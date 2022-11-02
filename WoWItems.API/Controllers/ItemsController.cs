@@ -56,32 +56,23 @@ namespace WoWItems.API.Controllers
         }
 
         [HttpPost]
-        public  ActionResult PostNewItem(ItemCreationDto item)
+        public  async Task<ActionResult> PostNewItem(ItemCreationDto item)
         {
             var _item = _mapper.Map<Item>(item);
-            _woWItemsRepository.AddItem(_item);
-            return NoContent();
+            await _woWItemsRepository.AddItemAsync(_item);
+            return CreatedAtRoute("GetItem",item);
         }
 
         [HttpDelete("{id}")]
-        public ActionResult DeleteItem(int id)
+        public async Task<ActionResult> DeleteItemAsync(int id)
         {
-            var item = _woWItemsRepository.GetItemAsync(id).Result;
+            var item = await _woWItemsRepository.GetItemAsync(id);
             if (item == null)
             {
                 return NotFound();
             }
-            while (item.PrimaryStat.Count > 0)
-            {
-                var stat = item.PrimaryStat.Where(p => p.ItemId == id).First();
-                item.PrimaryStat.Remove(stat);
-            }
-            while (item.SecondaryStats.Count > 0)
-            {
-                var stat = item.SecondaryStats.Where(s => s.ItemId == id).First();
-                item.SecondaryStats.Remove(stat);
-            }
-            _woWItemsRepository.DeleteItem(item);
+
+            await _woWItemsRepository.DeleteItemAsync(item);
             return NoContent();
         }
     }
