@@ -34,7 +34,7 @@ namespace WoWItems.API.Controllers
 
         [HttpPost]
         public async Task<ActionResult<PrimaryStatDto>> AddPrimaryStatToItem(
-                int itemId, PrimaryStatCreationDto primaryStat)
+                int itemId, PrimaryStatCreationDto primaryStat, CancellationToken token = default)
         {
             if (!await _woWItemsRepository.ItemExistsAsync(itemId))
             {
@@ -49,7 +49,7 @@ namespace WoWItems.API.Controllers
 
             await _woWItemsRepository.AddPrimaryStatToItemAsync(itemId, lastPrimaryStat);
 
-            await _woWItemsRepository.SaveChangesAsync();
+            await _woWItemsRepository.SaveChangesAsync(token);
 
             var createdPrimaryStat = _mapper.Map<PrimaryStatDto>(lastPrimaryStat);
 
@@ -92,7 +92,7 @@ namespace WoWItems.API.Controllers
                 return NotFound();
             }
             item.PrimaryStat.Remove(primaryStat);
-            await _woWItemsRepository.SaveChangesAsync(); //dorzucac tokeny! zeby calcela ogarnac
+            await _woWItemsRepository.SaveChangesAsync(token); //dorzucac tokeny! zeby calcela ogarnac
             return NoContent();
         }
 

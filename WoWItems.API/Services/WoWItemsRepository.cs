@@ -68,9 +68,9 @@ namespace WoWItems.API.Services
             return await _context.Items.Where(i => i.Id == itemId).AnyAsync();
         }
 
-        public async Task SaveChangesAsync()
+        public async Task SaveChangesAsync(CancellationToken token = default)
         {
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(token);
         }
 
         public async Task<bool> StatExistsAsync(int itemId, SecondaryStatType secondaryStatType)

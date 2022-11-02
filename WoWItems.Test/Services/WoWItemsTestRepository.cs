@@ -36,6 +36,7 @@ namespace WoWItems.Test.Services
 
         public Task DeleteItemAsync(Item item)
         {
+
             return Task.CompletedTask;
         }
 
@@ -59,9 +60,13 @@ namespace WoWItems.Test.Services
             throw new NotImplementedException();
         }
 
+        public PrimaryStat? GetPrimaryStat(int itemId, PrimaryStatType primaryStat)
+        {
+            return _primaryStat.FirstOrDefault(p => p.ItemId == itemId && p.PrimaryStatType == primaryStat);
+        }
         public Task<PrimaryStat?> GetStatAsync(int itemId, PrimaryStatType primaryStatType)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(GetPrimaryStat(itemId, primaryStatType));
         }
 
         public Task<SecondaryStat?> GetStatAsync(int itemId, SecondaryStatType secondaryStatType)
@@ -74,7 +79,7 @@ namespace WoWItems.Test.Services
             throw new NotImplementedException();
         }
 
-        public Task SaveChangesAsync()
+        public Task SaveChangesAsync(CancellationToken token = default)
         {
             //empty on perpouse
             return Task.CompletedTask;

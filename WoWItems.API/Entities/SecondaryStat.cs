@@ -10,7 +10,7 @@ namespace WoWItems.API.Entities
         public SecondaryStatType SecondaryStatType { get; set; }
         public int Value { get; set; }
 
-        public Item Item { get; set; }
+        public Item? Item { get; set; }
         public int ItemId { get; set; }
 
 
