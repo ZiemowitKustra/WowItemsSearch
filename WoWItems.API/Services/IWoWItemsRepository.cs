@@ -1,5 +1,6 @@
 ﻿using WoWItems.API.Entities;
-using WoWItems.API.Models;
+using WoWItems.API.Models.Stats.PrimaryStat;
+using WoWItems.API.Models.Stats.SecondaryStat;
 
 namespace WoWItems.API.Services
 {
@@ -16,7 +17,7 @@ namespace WoWItems.API.Services
         Task AddSecondaryStatToItemAsync(int itemId, SecondaryStat secondaryStat);
         Task AddPrimaryStatToItemAsync(int itemId, PrimaryStat primaryStat);
         Task AddItemAsync(Item item);
-        Task SaveChangesAsync();
+        Task SaveChangesAsync(CancellationToken token);
         Task DeleteItemAsync(Item item);
         Task UpdateStatAsync(PrimaryStat primaryStat);
         Task UpdateStatAsync(SecondaryStat secondaryStat);

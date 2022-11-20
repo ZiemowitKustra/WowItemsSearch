@@ -3,6 +3,8 @@ using System.Reflection.Metadata;
 using System.Text;
 using WoWItems.API.Entities;
 using WoWItems.API.Models;
+using WoWItems.API.Models.Stats.PrimaryStat;
+using WoWItems.API.Models.Stats.SecondaryStat;
 
 namespace WoWItems.API.DbContexts
 {
@@ -54,7 +56,7 @@ namespace WoWItems.API.DbContexts
                     Type = ItemType.Armor,
                     Armor = 679,
                     Stamina = 81,
-                    Durability = 120,
+                    Durability = 120
                 });
             modelBuilder.Entity<PrimaryStat>().HasData(
                 new PrimaryStat()

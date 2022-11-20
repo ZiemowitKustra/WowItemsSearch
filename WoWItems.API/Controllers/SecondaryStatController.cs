@@ -4,7 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Data.SqlTypes;
 using WoWItems.API.DbContexts;
-using WoWItems.API.Models;
+using WoWItems.API.Models.Stats.PrimaryStat;
+using WoWItems.API.Models.Stats.SecondaryStat;
 using WoWItems.API.Services;
 
 namespace WoWItems.API.Controllers
@@ -37,7 +38,7 @@ namespace WoWItems.API.Controllers
         [HttpPost]
         public async Task<ActionResult<SecondaryStatDto>> AddSecondaryStatToItem(
             int itemId,
-            SecondaryStatCreationDto secondaryStat)
+            SecondaryStatCreationDto secondaryStat, CancellationToken token = default)
         {
             if (!await _woWItemsRepository.ItemExistsAsync(itemId))
             {
@@ -52,7 +53,7 @@ namespace WoWItems.API.Controllers
 
             await _woWItemsRepository.AddSecondaryStatToItemAsync(itemId, lastSecondaryStat);
 
-            await _woWItemsRepository.SaveChangesAsync();
+            await _woWItemsRepository.SaveChangesAsync(token);
 
             var createdSecondaryStat = _mapper.Map<SecondaryStatDto>(lastSecondaryStat);
 
@@ -81,7 +82,7 @@ namespace WoWItems.API.Controllers
         }
 
         [HttpDelete("{statId}")]
-        public async Task<ActionResult> DeleteSecondaryStat(int itemId, int statId)
+        public async Task<ActionResult> DeleteSecondaryStat(int itemId, int statId, CancellationToken token = default)
         {
             var item = await _woWItemsRepository.GetItemAsync(itemId);
             if (item == null)
@@ -94,6 +95,7 @@ namespace WoWItems.API.Controllers
                 return NotFound();
             }
             item.SecondaryStats.Remove(secondaryStat);
+            await _woWItemsRepository.SaveChangesAsync(token);
             return NoContent();
         }
     }

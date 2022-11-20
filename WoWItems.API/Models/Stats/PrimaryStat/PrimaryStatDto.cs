@@ -1,4 +1,4 @@
-﻿namespace WoWItems.API.Models
+﻿namespace WoWItems.API.Models.Stats.PrimaryStat
 {
     public class PrimaryStatDto
     {

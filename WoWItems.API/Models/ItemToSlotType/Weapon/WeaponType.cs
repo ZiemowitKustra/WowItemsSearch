@@ -1,4 +1,4 @@
-﻿namespace WoWItems.API.Models
+﻿namespace WoWItems.API.Models.ItemToSlotType.Weapon
 {
     public enum WeaponType
     {
@@ -9,7 +9,9 @@
         Polearm,
         Staff,
         Sword,
-
-
+        TwoHandSword,
+        TwoHandAxe,
+        TwoHandMace,
+        Wand
     }
 }

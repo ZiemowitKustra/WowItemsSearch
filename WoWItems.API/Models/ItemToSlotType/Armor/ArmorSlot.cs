@@ -1,4 +1,4 @@
-﻿namespace WoWItems.API.Models
+﻿namespace WoWItems.API.Models.ItemToSlotType.Armor
 {
     public enum ArmorSlot
     {
@@ -14,6 +14,7 @@
         Legs,
         Feet,
         Ring,
-        Trinket
+        Trinket,
+        Offhand
     }
 }
