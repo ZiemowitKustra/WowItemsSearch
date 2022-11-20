@@ -22,11 +22,6 @@ namespace WoWItems.Test
         [Fact]
         public async Task  GetItemsAsync_PaginationVerification()
         {
-            var ListOfItems = new List<Item>()
-            {
-                new Item("RandomItem1"),
-                new Item("RandomItem2")
-            };
             var woWItemRepositoryMock = new Mock<IWoWItemsRepository>();
             var mapper = new Mock<IMapper>();
             //woWItemRepositoryMock.Setup(m => m.GetItemsAsync())

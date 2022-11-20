@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
-using WoWItems.API.Models;
+using WoWItems.API.Models.Stats.PrimaryStat;
 
 namespace WoWItems.API.Entities
 {

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using WoWItems.API.DbContexts;
 using WoWItems.API.Entities;
-using WoWItems.API.Models;
+using WoWItems.API.Models.Stats.PrimaryStat;
 using WoWItems.API.Services;
 
 namespace WoWItems.API.Controllers

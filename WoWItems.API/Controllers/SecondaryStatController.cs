@@ -4,7 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Data.SqlTypes;
 using WoWItems.API.DbContexts;
-using WoWItems.API.Models;
+using WoWItems.API.Models.Stats.PrimaryStat;
+using WoWItems.API.Models.Stats.SecondaryStat;
 using WoWItems.API.Services;
 
 namespace WoWItems.API.Controllers

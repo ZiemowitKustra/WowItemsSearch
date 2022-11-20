@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using WoWItems.API.Models.Stats.PrimaryStat;
 
 namespace WoWItems.API.Profiles
 {
@@ -6,10 +7,10 @@ namespace WoWItems.API.Profiles
     {
         public PrimaryStatProfile()
         {
-            CreateMap<Entities.PrimaryStat, Models.PrimaryStatDto>();
-            CreateMap<Models.PrimaryStatDto, Entities.PrimaryStat>();
-            CreateMap<Models.PrimaryStatCreationDto, Entities.PrimaryStat>();
-            CreateMap<Models.PrimaryStatUpdateDto, Entities.PrimaryStat>();
+            CreateMap<Entities.PrimaryStat, PrimaryStatDto>();
+            CreateMap<PrimaryStatDto, Entities.PrimaryStat>();
+            CreateMap<PrimaryStatCreationDto, Entities.PrimaryStat>();
+            CreateMap<PrimaryStatUpdateDto, Entities.PrimaryStat>();
         }
     }
 }

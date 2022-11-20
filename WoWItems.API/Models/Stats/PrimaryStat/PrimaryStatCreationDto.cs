@@ -1,8 +1,7 @@
-﻿namespace WoWItems.API.Models
+﻿namespace WoWItems.API.Models.Stats.PrimaryStat
 {
-    public class PrimaryStatUpdateDto
+    public class PrimaryStatCreationDto
     {
-        public int itemId { get; set; }
         public PrimaryStatType PrimaryStatType { get; set; }
         public int Value { get; set; }
     }

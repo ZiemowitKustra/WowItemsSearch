@@ -4,7 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using WoWItems.API.DbContexts;
 using WoWItems.API.Entities;
-using WoWItems.API.Models;
+using WoWItems.API.Models.Stats.PrimaryStat;
+using WoWItems.API.Models.Stats.SecondaryStat;
 
 namespace WoWItems.API.Services
 {
